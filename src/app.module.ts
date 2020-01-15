@@ -1,28 +1,23 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import config from './config/configuration'
+import { CONFIG } from './config/configuration'
 import { UserController } from './users/user.controller'
 import { UserService } from './users/user.service'
 import { mongoose } from '@typegoose/typegoose'
+import { ChatGateway } from './chats/chat.gateway'
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-            load: [config],
-        }),
-    ],
+    imports: [],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, ChatGateway],
 })
 export class AppModule {
-    constructor(private readonly configService: ConfigService) {
+    constructor() {
         this.connectMongoDB()
     }
 
     private async connectMongoDB() {
         await mongoose
-            .connect(this.configService.get<string>('database.uri'), {
+            .connect(CONFIG.database.uri, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             })
