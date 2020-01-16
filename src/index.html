@@ -34,6 +34,7 @@
             function sendMsg() {
                 socket.send(
                     JSON.stringify({
+                        event: 'message',
                         data: 'hello',
                     }),
                 )
