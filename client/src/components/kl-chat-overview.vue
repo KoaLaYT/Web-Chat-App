@@ -3,7 +3,7 @@
         <el-avatar
             shape="square"
             size="large"
-            :src="overview.avatar"
+            src="./koala-avatar.png"
             fit="contain"
             class="overview__avatar"
         ></el-avatar>
@@ -38,6 +38,7 @@ export default {
 .overview__avatar {
     flex: 0 0 auto;
     margin: 1rem;
+    background-color: rgba(0, 0, 0, 0);
 }
 .overview__info {
     flex: 3 1 0;

@@ -3,7 +3,7 @@
         <el-avatar
             shape="square"
             size="large"
-            :src="message.avatar"
+            src="./koala-avatar.png"
             fit="contain"
             class="avatar"
         ></el-avatar>
@@ -52,12 +52,31 @@ export default {
 }
 .avatar {
     flex: 0 0 auto;
+    background-color: rgba(0, 0, 0, 0);
 }
 .content {
+    position: relative;
+    color: white;
     margin-top: 0;
     margin-bottom: 0;
     padding: 1rem;
     border-radius: 4px;
     background-color: #409eff;
+}
+/* 三角 */
+.content::before {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border: 0.5rem solid transparent;
+}
+.left .content::before {
+    border-right: 0.5rem solid #409eff;
+    left: -1rem;
+}
+.right .content::before {
+    border-left: 0.5rem solid #409eff;
+    right: -1rem;
 }
 </style>
