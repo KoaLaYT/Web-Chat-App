@@ -6,7 +6,10 @@ import { setGlobalOptions } from '@typegoose/typegoose'
 import * as express from 'express'
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create(AppModule, {
+        logger: true,
+        cors: true,
+    })
     // typegoose global settings
     setGlobalOptions({ schemaOptions: { timestamps: true, versionKey: false } })
     // ws websocket
