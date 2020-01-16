@@ -21,15 +21,15 @@ export default {
     methods: {
         async login() {
             if (this.name) {
+                const data = { name: this.name }
+                // eslint-disable-next-line
+                console.log(data)
                 const res = await fetch(`${SERVER}/user`, {
                     method: 'POST',
-                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        name: this.name,
-                    }),
+                    body: JSON.stringify(data),
                 })
                 // eslint-disable-next-line
                 console.log(res)

@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { CONFIG } from './config/configuration'
 import { WsAdapter } from '@nestjs/platform-ws'
-import './plugins/element.js'
 import { setGlobalOptions } from '@typegoose/typegoose'
+import * as express from 'express'
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
