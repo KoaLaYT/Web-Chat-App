@@ -2,13 +2,15 @@
     <div class="login">
         <span class="login__desc">昵称：</span>
         <el-input v-model="name" size="mini" class="login__input"></el-input>
-        <el-button type="primary" size="mini" class="login__btn" @click="login"
-            >开始
+        <el-button type="primary" size="mini" class="login__btn" @click="login">
+            开始
         </el-button>
     </div>
 </template>
 
 <script>
+import { SERVER } from '@/util'
+
 export default {
     name: 'kl-login',
     data() {
@@ -17,9 +19,21 @@ export default {
         }
     },
     methods: {
-        login() {
+        async login() {
             if (this.name) {
-                this.$emit('login', this.name)
+                const res = await fetch(`${SERVER}/user`, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: this.name,
+                    }),
+                })
+                // eslint-disable-next-line
+                console.log(res)
+                // this.$emit('login', this.name)
             }
         },
     },
