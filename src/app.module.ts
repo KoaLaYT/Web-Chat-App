@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { CONFIG } from './config/configuration'
 import { UserController } from './users/user.controller'
 import { UserService } from './users/user.service'
-import { mongoose } from '@typegoose/typegoose'
+import { mongoose, setGlobalOptions } from '@typegoose/typegoose'
 import { ChatGateway } from './chats/chat.gateway'
 
 @Module({
@@ -20,6 +20,7 @@ export class AppModule {
             .connect(CONFIG.database.uri, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
+                useFindAndModify: false,
             })
             .catch(e => console.error(e))
         console.log('Connected to database')

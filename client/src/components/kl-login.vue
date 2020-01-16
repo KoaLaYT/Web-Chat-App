@@ -21,19 +21,14 @@ export default {
     methods: {
         async login() {
             if (this.name) {
-                const data = { name: this.name }
-                // eslint-disable-next-line
-                console.log(data)
                 const res = await fetch(`${SERVER}/user`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify({ name: this.name }),
                 })
-                // eslint-disable-next-line
-                console.log(res)
-                // this.$emit('login', this.name)
+                this.$emit('login', await res.json())
             }
         },
     },
