@@ -7,7 +7,7 @@
             title="登录"
             :width="'30%'"
         >
-            <kl-login @login="fetchData"></kl-login>
+            <kl-login @login="login"></kl-login>
         </el-dialog>
         <!-- messages -->
         <transition name="el-zoom-in-top">
@@ -35,6 +35,8 @@ import KlChatOverviewList from '@/components/kl-chat-overview-list'
 import KlChatInput from '@/components/kl-chat-input'
 import KlChatMessageList from '@/components/kl-chat-message-list'
 
+const SERVER = 'ws://www.koalayt.top/chat'
+
 export default {
     name: 'app',
     components: {
@@ -49,12 +51,24 @@ export default {
         return {
             isLogin: false,
             name: '',
+            socket: undefined,
         }
     },
     methods: {
-        fetchData(val) {
+        login(val) {
             this.isLogin = true
             this.name = val
+
+            this.socket = new Socket(SERVER)
+            this.socket.onopen = function(e) {
+                console.log(e)
+                this.socket.send(
+                    JSON.stringify({
+                        event: 'login',
+                        id: this.name,
+                    }),
+                )
+            }
         },
     },
 }

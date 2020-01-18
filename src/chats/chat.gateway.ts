@@ -2,6 +2,7 @@ import {
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
+    MessageBody,
 } from '@nestjs/websockets'
 import { Server } from 'ws'
 
@@ -10,10 +11,10 @@ export class ChatGateway {
     @WebSocketServer()
     server: Server
 
-    @SubscribeMessage('message')
-    handleMessage(client: any, payload: any): string {
-        console.log(this.server.clients)
-        console.log(typeof client, typeof payload)
-        return 'Hello world!'
+    @SubscribeMessage('login')
+    handleMessage(@MessageBody() data) {
+        console.log(data)
+        console.log(this.server.clients.size)
+        setTimeout(() => console.log(this.server.clients.size), 30000)
     }
 }
