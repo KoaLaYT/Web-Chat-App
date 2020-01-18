@@ -1,1 +1,2 @@
-export const SERVER = 'http://localhost:9876' //'http://www.koalayt.top'
+export const SERVER = 'http://www.koalayt.top'
+export const WSSERVER = 'ws://www.koalayt.top/chat'

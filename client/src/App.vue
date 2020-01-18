@@ -34,8 +34,7 @@ import KlChatLayout from '@/components/kl-chat-layout'
 import KlChatOverviewList from '@/components/kl-chat-overview-list'
 import KlChatInput from '@/components/kl-chat-input'
 import KlChatMessageList from '@/components/kl-chat-message-list'
-
-const SERVER = 'ws://www.koalayt.top/chat'
+import { WSSERVER } from './util'
 
 export default {
     name: 'app',
@@ -59,8 +58,9 @@ export default {
             this.isLogin = true
             this.name = val
 
-            this.socket = new Socket(SERVER)
+            this.socket = new WebSocket(WSSERVER)
             this.socket.onopen = function(e) {
+                // eslint-disable-next-line
                 console.log(e)
                 this.socket.send(
                     JSON.stringify({
