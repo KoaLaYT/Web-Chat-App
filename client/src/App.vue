@@ -13,7 +13,7 @@
         <transition name="el-zoom-in-top">
             <kl-chat-layout v-if="isLogin">
                 <template #sidebar>
-                    <kl-mine-info :info="{ name }"></kl-mine-info>
+                    <kl-mine-info :info="{ name: userInfo.name }"></kl-mine-info>
                     <kl-chat-overview-list></kl-chat-overview-list>
                 </template>
                 <template #messages>
@@ -49,25 +49,28 @@ export default {
     data() {
         return {
             isLogin: false,
-            name: '',
-            socket: undefined,
+            userInfo: undefined,
         }
     },
     methods: {
-        login(val) {
+        login(payload) {
             this.isLogin = true
-            this.name = val
+            this.userInfo = { ...payload }
 
-            this.socket = new WebSocket(WSSERVER)
-            this.socket.onopen = function(e) {
+            const socket = new WebSocket(WSSERVER)
+            socket.onopen = function(e) {
                 // eslint-disable-next-line
                 console.log(e)
-                this.socket.send(
+                socket.send(
                     JSON.stringify({
                         event: 'login',
-                        id: this.name,
+                        data: { id: payload.id },
                     }),
                 )
+            }
+            socket.onclose = function(e) {
+                // eslint-disable-next-line
+                console.log(e)
             }
         },
     },

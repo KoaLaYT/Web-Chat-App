@@ -1,8 +1,17 @@
 <template>
     <div class="login">
         <span class="login__desc">昵称：</span>
-        <el-input v-model="name" size="mini" class="login__input"></el-input>
-        <el-button type="primary" size="mini" class="login__btn" @click="login">
+        <el-input
+            v-model="name"
+            size="mini"
+            class="login__input"
+        ></el-input>
+        <el-button
+            type="primary"
+            size="mini"
+            class="login__btn"
+            @click="login"
+        >
             开始
         </el-button>
     </div>
@@ -28,7 +37,7 @@ export default {
                     },
                     body: JSON.stringify({ name: this.name }),
                 })
-                this.$emit('login', await res.json())
+                this.$emit('login', { id: await res.json(), name: this.name })
             }
         },
     },
