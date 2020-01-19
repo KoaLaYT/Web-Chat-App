@@ -19,7 +19,7 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('message')
-    async handleMessage(@MessageBody() data) {
+    async handleMessage(@MessageBody() data, @ConnectedSocket() client) {
         const originId = data.id
         delete data.id
         // save this message to databse
@@ -27,20 +27,27 @@ export class ChatGateway {
         // if rcv is connected, send it
         this.server.clients.forEach(client => {
             if ((client as any).id === data.rcvId) {
-                client.send({
-                    id: msg.id,
-                    type: 'rcv',
-                    content: data.content,
-                })
+                client.send(
+                    JSON.stringify({
+                        event: 'message',
+                        data: {
+                            id: msg.id,
+                            type: 'rcv',
+                            content: data.content,
+                        },
+                    }),
+                )
             }
         })
         // send real id back
-        return {
-            event: 'confirm',
-            data: {
-                originId,
-                realId: msg._id,
-            },
-        }
+        client.send(
+            JSON.stringify({
+                event: 'confirm',
+                data: {
+                    originId,
+                    realId: msg._id,
+                },
+            }),
+        )
     }
 }
