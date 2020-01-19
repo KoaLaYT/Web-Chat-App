@@ -68,6 +68,10 @@ export default {
                     }),
                 )
             }
+            socket.onmessage = function(e) {
+                // eslint-disable-next-line
+                console.log(e)
+            }
             socket.onclose = function(e) {
                 // eslint-disable-next-line
                 console.log(e)

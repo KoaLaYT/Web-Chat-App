@@ -1,5 +1,5 @@
 import { UserService } from './user.service'
-import { Controller, Post, Body, Headers } from '@nestjs/common'
+import { Controller, Post, Body, Headers, Get, Query } from '@nestjs/common'
 
 @Controller('/user')
 export class UserController {
@@ -8,5 +8,10 @@ export class UserController {
     @Post('/')
     postAUser(@Body('name') name: string) {
         return this.userService.postAUser(name)
+    }
+
+    @Get('/')
+    getUsers(@Query('self') self: string) {
+        return this.userService.getUsers(self)
     }
 }

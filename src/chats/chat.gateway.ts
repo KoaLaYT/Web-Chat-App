@@ -13,9 +13,7 @@ export class ChatGateway {
     server: Server
 
     @SubscribeMessage('login')
-    handleMessage(@MessageBody() data, @ConnectedSocket() client: WebSocket) {
-        console.log(data)
-        console.log(this.server.clients.size)
-        console.log(this.server.clients.forEach(c => (c as any).id))
+    handleMessage(@MessageBody() data, @ConnectedSocket() client) {
+        client.id = data.id
     }
 }

@@ -11,4 +11,9 @@ export class UserService {
         }
         return user._id
     }
+
+    // return all the user's name and id, except self
+    async getUsers(self: string) {
+        return await User.find({ _id: { $nin: [self] } }).select('name')
+    }
 }
