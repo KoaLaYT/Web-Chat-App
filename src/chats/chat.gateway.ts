@@ -19,7 +19,7 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('message')
-    async handleMessage(@MessageBody() data, @ConnectedSocket() client) {
+    async handleMessage(@MessageBody() data) {
         const originId = data.id
         delete data.id
         // save this message to databse
@@ -40,12 +40,12 @@ export class ChatGateway {
             }
         })
         // send real id back
-        client.send({
+        return {
             event: 'confirm',
             data: {
                 originId,
                 realId: msg._id,
             },
-        })
+        }
     }
 }
