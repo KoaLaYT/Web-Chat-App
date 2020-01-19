@@ -40,14 +40,12 @@ export class ChatGateway {
             }
         })
         // send real id back
-        client.send(
-            JSON.stringify({
-                event: 'confirm',
-                data: {
-                    originId,
-                    realId: msg._id,
-                },
-            }),
-        )
+        client.send({
+            event: 'confirm',
+            data: {
+                originId,
+                realId: msg._id,
+            },
+        })
     }
 }
