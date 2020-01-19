@@ -20,8 +20,24 @@ export class ChatGateway {
 
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() data) {
-        console.log(data)
+        const originId = data.id
+        delete data.id
         // save this message to databse
-        // const msg = await Message.create(data)
+        const msg = await Message.create(data)
+        // if rcv is connected, send it
+        this.server.clients.forEach(client => {
+            if ((client as any).id === data.rcvId) {
+                client.send({
+                    id: msg.id,
+                    type: 'rcv',
+                    content: data.content,
+                })
+            }
+        })
+        // send real id back
+        return {
+            originId,
+            realId: msg._id,
+        }
     }
 }
