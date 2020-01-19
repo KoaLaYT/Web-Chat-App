@@ -2,13 +2,15 @@ import { Module } from '@nestjs/common'
 import { CONFIG } from './config/configuration'
 import { UserController } from './users/user.controller'
 import { UserService } from './users/user.service'
-import { mongoose, setGlobalOptions } from '@typegoose/typegoose'
+import { mongoose } from '@typegoose/typegoose'
 import { ChatGateway } from './chats/chat.gateway'
+import { MessageController } from './chats/message.controller'
+import { MessageService } from './chats/message.service'
 
 @Module({
     imports: [],
-    controllers: [UserController],
-    providers: [UserService, ChatGateway],
+    controllers: [UserController, MessageController],
+    providers: [UserService, ChatGateway, MessageService],
 })
 export class AppModule {
     constructor() {
