@@ -36,8 +36,11 @@ export class ChatGateway {
         })
         // send real id back
         return {
-            originId,
-            realId: msg._id,
+            event: 'confirm',
+            data: {
+                originId,
+                realId: msg._id,
+            },
         }
     }
 }
