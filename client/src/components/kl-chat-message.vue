@@ -8,6 +8,8 @@
             class="avatar"
         ></el-avatar>
         <p class="content">{{ message.content }}</p>
+        <!-- !!TODO: add a nice spinner -->
+        <!-- <p v-if="message.sending">sending...</p> -->
     </div>
 </template>
 

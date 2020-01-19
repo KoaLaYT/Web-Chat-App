@@ -2,7 +2,11 @@
     <div class="input">
         <section class="input__toolbar">
             <kl-chat-toolbar></kl-chat-toolbar>
-            <el-button type="primary" size="mini">发送</el-button>
+            <el-button
+                type="primary"
+                size="mini"
+                @click="handleSend"
+            >发送</el-button>
         </section>
         <el-input
             class="input__message"
@@ -25,6 +29,14 @@ export default {
         return {
             message: '',
         }
+    },
+    methods: {
+        handleSend() {
+            if (this.message) {
+                this.$emit('msgSend', this.message)
+                this.message = ''
+            }
+        },
     },
 }
 </script>

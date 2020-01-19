@@ -2,7 +2,7 @@
     <div>
         <kl-chat-message
             v-for="msg in messages"
-            :key="msg._id"
+            :key="msg.id"
             :message="msg"
         ></kl-chat-message>
     </div>
@@ -10,42 +10,17 @@
 
 <script>
 import KlChatMessage from '@/components/kl-chat-message'
+import { mapState } from 'vuex'
 
 export default {
     name: 'KlChatMessageList',
     components: {
         KlChatMessage,
     },
-    data() {
-        return {
-            sndAvatar: '',
-            rcvAvatar: '',
-            messages: [
-                { type: 'snd', content: '喝水' },
-                { type: 'snd', content: '喝水' },
-                { type: 'rcv', content: '解毒' },
-                { type: 'snd', content: '喝水' },
-                { type: 'snd', content: '喝水' },
-                { type: 'rcv', content: '解毒' },
-                { type: 'snd', content: '喝水' },
-                { type: 'snd', content: '喝水' },
-                { type: 'snd', content: '喝水' },
-                { type: 'rcv', content: '解毒' },
-                { type: 'snd', content: '喝水' },
-                { type: 'snd', content: '喝水' },
-                {
-                    type: 'snd',
-                    content:
-                        '喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水喝水',
-                },
-                {
-                    type: 'rcv',
-                    content:
-                        '解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒解毒',
-                },
-                { type: 'rcv', content: '解毒' },
-            ],
-        }
+    computed: {
+        ...mapState({
+            messages: 'chatMsgs',
+        }),
     },
 }
 </script>

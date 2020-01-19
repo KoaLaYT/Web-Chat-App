@@ -17,10 +17,10 @@
                     <kl-chat-overview-list></kl-chat-overview-list>
                 </template>
                 <template #messages>
-                    <kl-chat-message-list></kl-chat-message-list>
+                    <kl-chat-message-list v-loading="msgLoading"></kl-chat-message-list>
                 </template>
                 <template #input>
-                    <kl-chat-input></kl-chat-input>
+                    <kl-chat-input @msgSend="handleSend"></kl-chat-input>
                 </template>
             </kl-chat-layout>
         </transition>
@@ -35,6 +35,7 @@ import KlChatOverviewList from '@/components/kl-chat-overview-list'
 import KlChatInput from '@/components/kl-chat-input'
 import KlChatMessageList from '@/components/kl-chat-message-list'
 import { WSSERVER } from './util'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'app',
@@ -49,32 +50,69 @@ export default {
     data() {
         return {
             isLogin: false,
-            userInfo: undefined,
+            socket: undefined,
         }
     },
+    computed: {
+        ...mapState(['userInfo', 'msgLoading', 'withInfo']),
+    },
     methods: {
+        ...mapActions(['updateUserInfo', 'addChatMsg', 'confirmChatMsg']),
         login(payload) {
             this.isLogin = true
-            this.userInfo = { ...payload }
+            this.updateUserInfo(payload)
 
-            const socket = new WebSocket(WSSERVER)
-            socket.onopen = function(e) {
+            this.socket = new WebSocket(WSSERVER)
+            this.socket.onopen = e => {
                 // eslint-disable-next-line
                 console.log(e)
-                socket.send(
+                this.socket.send(
                     JSON.stringify({
                         event: 'login',
                         data: { id: payload.id },
                     }),
                 )
             }
-            socket.onmessage = function(e) {
+            this.socket.onmessage = e => {
                 // eslint-disable-next-line
                 console.log(e)
+                const res = JSON.parse(e.data)
+                switch (res.event) {
+                    case 'confirm': {
+                        this.confirmChatMsg(res.data)
+                    }
+                }
             }
-            socket.onclose = function(e) {
+            this.socket.onclose = () => {
                 // eslint-disable-next-line
-                console.log(e)
+                console.log('socket closed')
+                this.socket = undefined
+            }
+        },
+        handleSend(msg) {
+            if (this.socket) {
+                const id = Date.now()
+                this.socket.send(
+                    JSON.stringify({
+                        event: 'message',
+                        data: {
+                            id,
+                            sndId: this.userInfo.id,
+                            sndName: this.userInfo.name,
+                            rcvId: this.withInfo.id,
+                            rcvName: this.withInfo.name,
+                            msg,
+                        },
+                    }),
+                )
+                // this id is fake, waiting for server receive,
+                // and will be replaced with real id
+                this.addChatMsg({
+                    id,
+                    type: 'snd',
+                    content: msg,
+                    sending: true,
+                })
             }
         },
     },
