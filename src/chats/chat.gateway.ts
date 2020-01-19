@@ -1,3 +1,4 @@
+import { Message } from './message.entity'
 import {
     SubscribeMessage,
     WebSocketGateway,
@@ -13,7 +14,14 @@ export class ChatGateway {
     server: Server
 
     @SubscribeMessage('login')
-    handleMessage(@MessageBody() data, @ConnectedSocket() client) {
+    handleLogin(@MessageBody() data, @ConnectedSocket() client) {
         client.id = data.id
+    }
+
+    @SubscribeMessage('message')
+    async handleMessage(@MessageBody() data) {
+        console.log(data)
+        // save this message to databse
+        // const msg = await Message.create(data)
     }
 }
