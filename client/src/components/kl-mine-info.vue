@@ -1,14 +1,17 @@
 <template>
     <div>
         <div class="info">
-            <span class="info__name">{{ info.name }}</span>
+            <span class="info__name">{{ userInfo.name }}</span>
             <el-button
                 icon="el-icon-search"
                 circle
                 @click="listShow = true"
             ></el-button>
         </div>
-        <el-dialog title="用户" :visible.sync="listShow">
+        <el-dialog
+            title="用户"
+            :visible.sync="listShow"
+        >
             <kl-chat-userlist @click="listShow = !listShow"></kl-chat-userlist>
         </el-dialog>
     </div>
@@ -16,17 +19,17 @@
 
 <script>
 import KlChatUserlist from './kl-chat-userlist'
+import { mapState } from 'vuex'
 
 export default {
     name: 'KlMineInfo',
     components: {
         KlChatUserlist,
     },
-    props: {
-        info: {
-            type: Object,
-            required: true,
-        },
+    computed: {
+        ...mapState({
+            userInfo: state => state.user.userInfo,
+        }),
     },
     data() {
         return {

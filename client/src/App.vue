@@ -2,18 +2,18 @@
     <div>
         <!-- login -->
         <el-dialog
-            :visible="!isLogin"
+            :visible="!userInfo.id"
             :show-close="false"
             title="登录"
             :width="'30%'"
         >
-            <kl-login @login="login"></kl-login>
+            <kl-login></kl-login>
         </el-dialog>
         <!-- messages -->
         <transition name="el-zoom-in-top">
-            <kl-chat-layout v-if="isLogin">
+            <kl-chat-layout v-if="userInfo.id">
                 <template #sidebar>
-                    <kl-mine-info :info="{ name: userInfo.name }"></kl-mine-info>
+                    <kl-mine-info></kl-mine-info>
                     <kl-chat-overview-list></kl-chat-overview-list>
                 </template>
                 <template #messages>
@@ -34,7 +34,7 @@ import KlChatLayout from '@/components/kl-chat-layout'
 import KlChatOverviewList from '@/components/kl-chat-overview-list'
 import KlChatInput from '@/components/kl-chat-input'
 import KlChatMessageList from '@/components/kl-chat-message-list'
-import { WSSERVER } from './util'
+// import { WSSERVER } from './util'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -49,46 +49,44 @@ export default {
     },
     data() {
         return {
-            isLogin: false,
             socket: undefined,
         }
     },
     computed: {
-        ...mapState(['userInfo', 'msgLoading', 'withInfo']),
+        ...mapState({
+            userInfo: state => state.user.userInfo,
+            msgLoading: state => state.chat.msgLoading,
+            withInfo: state => state.chat.withInfo,
+        }),
     },
     methods: {
-        ...mapActions(['updateUserInfo', 'addChatMsg', 'confirmChatMsg']),
-        login(payload) {
-            this.isLogin = true
-            this.updateUserInfo(payload)
-
-            this.socket = new WebSocket(WSSERVER)
-            this.socket.onopen = e => {
-                // eslint-disable-next-line
-                console.log(e)
-                this.socket.send(
-                    JSON.stringify({
-                        event: 'login',
-                        data: { id: payload.id },
-                    }),
-                )
-            }
-            this.socket.onmessage = e => {
-                // eslint-disable-next-line
-                console.log(e)
-                const res = JSON.parse(e.data)
-                switch (res.event) {
-                    case 'confirm': {
-                        this.confirmChatMsg(res.data)
-                    }
-                }
-            }
-            this.socket.onclose = () => {
-                // eslint-disable-next-line
-                console.log('socket closed')
-                this.socket = undefined
-            }
-        },
+        ...mapActions(['addChatMsg', 'confirmChatMsg']),
+        // this.socket = new WebSocket(WSSERVER)
+        // this.socket.onopen = e => {
+        //     // eslint-disable-next-line
+        //     console.log(e)
+        //     this.socket.send(
+        //         JSON.stringify({
+        //             event: 'login',
+        //             data: { id: payload.id },
+        //         }),
+        //     )
+        // }
+        // this.socket.onmessage = e => {
+        //     // eslint-disable-next-line
+        //     console.log(e)
+        //     const res = JSON.parse(e.data)
+        //     switch (res.event) {
+        //         case 'confirm': {
+        //             this.confirmChatMsg(res.data)
+        //         }
+        //     }
+        // }
+        // this.socket.onclose = () => {
+        //     // eslint-disable-next-line
+        //     console.log('socket closed')
+        //     this.socket = undefined
+        // }
         handleSend(msg) {
             if (this.socket) {
                 const id = Date.now()

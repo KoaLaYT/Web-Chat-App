@@ -10,7 +10,7 @@
             type="primary"
             size="mini"
             class="login__btn"
-            @click="login"
+            @click="handleClick"
         >
             开始
         </el-button>
@@ -18,26 +18,25 @@
 </template>
 
 <script>
-import { SERVER } from '@/util'
+import { mapActions } from 'vuex'
 
 export default {
     name: 'kl-login',
-    data() {
-        return {
-            name: '',
-        }
+    computed: {
+        name: {
+            get() {
+                return this.$store.state.user.loginName
+            },
+            set(name) {
+                this.$store.commit('setName', name)
+            },
+        },
     },
     methods: {
-        async login() {
+        ...mapActions(['login']),
+        handleClick() {
             if (this.name) {
-                const res = await fetch(`${SERVER}/user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name: this.name }),
-                })
-                this.$emit('login', { id: await res.json(), name: this.name })
+                this.login()
             }
         },
     },

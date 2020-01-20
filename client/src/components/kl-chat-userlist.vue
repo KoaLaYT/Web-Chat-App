@@ -19,36 +19,22 @@
 </template>
 
 <script>
-import { SERVER, fetchWithLoading } from '../util'
 import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'kl-chat-userlist',
-    data() {
-        return {
-            users: [],
-            update: false,
-        }
-    },
     computed: {
-        ...mapState(['userInfo']),
+        ...mapState({
+            userInfo: state => state.user.userInfo,
+            update: state => state.user.userLoading,
+            users: state => state.user.totalUsers,
+        }),
     },
     created() {
         this.fetchUsers()
     },
     methods: {
-        ...mapActions(['fetchChatHistory']),
-        async fetchUsers() {
-            fetchWithLoading.bind(this)(async () => {
-                const res = await fetch(
-                    `${SERVER}/user?self=${this.userInfo.id}`,
-                    {
-                        method: 'GET',
-                    },
-                )
-                this.users = await res.json()
-            })
-        },
+        ...mapActions(['fetchChatHistory', 'fetchUsers']),
         handleClick(row) {
             // start conversation with `row._id`
             // update chatMessages

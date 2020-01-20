@@ -19,7 +19,7 @@ export default {
     },
     computed: {
         ...mapState({
-            messages: 'chatMsgs',
+            messages: state => state.chat.chatMsgs,
         }),
     },
 }
