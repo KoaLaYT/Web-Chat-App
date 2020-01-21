@@ -7,9 +7,14 @@
             fit="contain"
             class="avatar"
         ></el-avatar>
-        <p class="content">{{ message.content }}</p>
-        <!-- !!TODO: add a nice spinner -->
-        <!-- <p v-if="message.sending">sending...</p> -->
+        <p class="content">
+            <i
+                class="el-icon-loading"
+                v-if="message.sending"
+            ></i>
+            {{ message.content }}
+        </p>
+
     </div>
 </template>
 

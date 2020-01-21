@@ -1,5 +1,8 @@
 <template>
-    <div class="login">
+    <div
+        class="login"
+        v-loading.fullscreen.lock="loading"
+    >
         <span class="login__desc">昵称：</span>
         <el-input
             v-model="name"
@@ -18,11 +21,14 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'kl-login',
     computed: {
+        ...mapState({
+            loading: state => state.user.userLoading,
+        }),
         name: {
             get() {
                 return this.$store.state.user.loginName

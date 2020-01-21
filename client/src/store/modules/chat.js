@@ -64,12 +64,6 @@ const actions = {
             )
         }
     },
-    addChatMsg({ commit }, msg) {
-        commit('addChatMsg', msg)
-    },
-    confirmChatMsg({ commit }, msgInfo) {
-        commit('confirmChatMsg', msgInfo)
-    },
 }
 
 export default {

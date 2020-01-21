@@ -20,6 +20,7 @@
 
 <script>
 import KlChatToolbar from '@/components/kl-chat-toolbar'
+import { mapActions } from 'vuex'
 export default {
     name: 'KlChatInput',
     components: {
@@ -31,9 +32,10 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['sendMsg']),
         handleSend() {
             if (this.message) {
-                this.$emit('msgSend', this.message)
+                this.sendMsg(this.message)
                 this.message = ''
             }
         },

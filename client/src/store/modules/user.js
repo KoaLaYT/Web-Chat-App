@@ -36,15 +36,27 @@ const actions = {
             commit('toggleLoading', false)
         }
     },
-    async login({ commit, state }) {
-        const res = await fetch(`${SERVER}/user`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name: state.loginName }),
-        })
+    async login({ commit, state, dispatch }) {
+        let res
+        commit('toggleLoading', true)
+        try {
+            res = await fetch(`${SERVER}/user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: state.loginName }),
+            })
+        } catch (e) {
+            // eslint-disable-next-line
+            console.error(e)
+            commit('setUserInfo', { id: '', name: '' })
+        } finally {
+            commit('toggleLoading', false)
+        }
         commit('setUserInfo', { id: await res.json(), name: state.loginName })
+        // setup the websocket connection
+        dispatch('establishConnection')
     },
 }
 
