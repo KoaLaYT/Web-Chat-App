@@ -20,8 +20,8 @@ export class ChatGateway {
 
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() data) {
-        const originId = data.id
-        delete data.id
+        const originId = data.originId
+        delete data.originId
         // save this message to databse
         const msg = await Message.create(data)
         // if rcv is connected, send it
