@@ -6,9 +6,15 @@ import { mongoose } from '@typegoose/typegoose'
 import { ChatGateway } from './chats/chat.gateway'
 import { MessageController } from './chats/message.controller'
 import { MessageService } from './chats/message.service'
+import { ServeStaticModule } from '@nestjs/serve-static'
+import { join } from 'path'
 
 @Module({
-    imports: [],
+    imports: [
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', 'client/dist'),
+        }),
+    ],
     controllers: [UserController, MessageController],
     providers: [UserService, ChatGateway, MessageService],
 })
