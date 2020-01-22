@@ -34,15 +34,21 @@ export class MessageService {
             })
             .project({
                 _id: 0,
-                title: {
+                id: {
                     $cond: {
                         if: { $eq: ['$sndId', ObjectId(userId)] },
-                        then: '$rcvName',
-                        else: '$sndName',
+                        then: { title: '$rcvName', id: '$rcvId' },
+                        else: { title: '$sndName', id: '$sndId' },
                     },
                 },
                 time: '$createdAt',
                 message: '$msg',
+            })
+            .project({
+                id: '$id.id',
+                title: '$id.title',
+                time: 1,
+                message: 1,
             })
             .sort('time')
             .group({ _id: '$title', overview: { $mergeObjects: '$$ROOT' } })
