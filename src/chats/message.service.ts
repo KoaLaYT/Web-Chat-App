@@ -18,12 +18,13 @@ export class MessageService {
         pageNum: number
         pageSize: number
     }) {
-        return await Message.find({
+        const msgs = await Message.find({
             $or: [{ sndId: u1, rcvId: u2 }, { sndId: u2, rcvId: u1 }],
         })
-            .sort('createdAt')
+            .sort('-createdAt')
             .skip(pageSize * pageNum)
             .limit(pageSize)
+        return msgs.sort((a: any, b: any) => a.createdAt - b.createdAt)
     }
 
     // get chat overview list of user
