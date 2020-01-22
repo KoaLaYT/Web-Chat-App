@@ -5,6 +5,11 @@ import { Controller, Get, Query, Param } from '@nestjs/common'
 export class MessageController {
     constructor(private readonly messageService: MessageService) {}
 
+    @Get('/overview/:userId')
+    getOverview(@Param('userId') userId: string) {
+        return this.messageService.getOverview(userId)
+    }
+
     @Get('/:userId')
     getChat(
         @Param('userId') userId: string,

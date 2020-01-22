@@ -1,5 +1,8 @@
 import { Message } from './message.entity'
 import { Injectable } from '@nestjs/common'
+import * as mongoose from 'mongoose'
+
+const ObjectId = mongoose.Types.ObjectId
 
 @Injectable()
 export class MessageService {
@@ -21,5 +24,28 @@ export class MessageService {
             .sort('createdAt')
             .skip(pageSize * pageNum)
             .limit(pageSize)
+    }
+
+    // get chat overview list of user
+    async getOverview(userId: string) {
+        return await Message.aggregate()
+            .match({
+                $or: [{ sndId: ObjectId(userId) }, { rcvId: ObjectId(userId) }],
+            })
+            .project({
+                _id: 0,
+                title: {
+                    $cond: {
+                        if: { $eq: ['$sndId', ObjectId(userId)] },
+                        then: '$rcvName',
+                        else: '$sndName',
+                    },
+                },
+                time: '$createdAt',
+                message: '$msg',
+            })
+            .sort('time')
+            .group({ _id: '$title', overview: { $mergeObjects: '$$ROOT' } })
+            .replaceRoot('overview')
     }
 }
