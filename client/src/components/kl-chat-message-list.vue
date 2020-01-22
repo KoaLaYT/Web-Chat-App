@@ -1,9 +1,10 @@
 <template>
     <div>
         <kl-chat-message
-            v-for="msg in messages"
+            v-for="(msg, index) in messages"
             :key="msg.id"
             :message="msg"
+            :class="index===messages.length-1?'last':''"
         ></kl-chat-message>
     </div>
 </template>

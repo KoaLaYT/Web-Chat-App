@@ -57,6 +57,7 @@ const actions = {
         commit('setUserInfo', { id: await res.json(), name: state.loginName })
         // setup the websocket connection
         dispatch('establishConnection')
+        // fetch history chat list
     },
 }
 

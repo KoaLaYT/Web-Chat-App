@@ -1,14 +1,25 @@
-import { SERVER } from '../../util'
+import { SERVER, fetchData } from '../../util'
 
 const state = {
     chatMsgs: [],
     withInfo: { id: '', name: '' },
     msgLoading: false,
+    overviewList: [],
+    overviewLoading: false,
 }
 
 const mutations = {
     addChatMsg(state, msg) {
         state.chatMsgs.push(msg)
+        setImmediate(() => {
+            document
+                .querySelector('.last')
+                .scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end',
+                    inline: 'end',
+                })
+        })
     },
     initChatMsg(state, msgs) {
         state.chatMsgs = msgs
@@ -23,11 +34,14 @@ const mutations = {
     setCurrentWithId(state, withInfo) {
         state.withInfo = withInfo
     },
-    msgStartLoading(state) {
-        state.msgLoading = true
+    toggleMsgLoading(state, toggle) {
+        state.msgLoading = toggle
     },
-    msgStopLoading(state) {
-        state.msgLoading = false
+    getOverviewList(state, list) {
+        state.overviewList = list
+    },
+    toggleOverviewLoading(state, toggle) {
+        state.overviewLoading = toggle
     },
 }
 
@@ -38,19 +52,14 @@ const actions = {
     ) {
         if (rootState.user.userInfo.id) {
             commit('setCurrentWithId', { id: withId, name: withName })
-            let msgs = []
-            commit('msgStartLoading')
-            try {
-                const res = await fetch(
-                    `${SERVER}/message/${rootState.user.userInfo.id}?with=${withId}&pageSize=10&pageNum=${pageNum}`,
-                )
-                msgs = await res.json()
-            } catch (e) {
-                // eslint-disable-next-line
-                console.error(e)
-            } finally {
-                commit('msgStopLoading')
-            }
+            const msgs = await fetchData({
+                fetchFn: () =>
+                    fetch(
+                        `${SERVER}/message/${rootState.user.userInfo.id}?with=${withId}&pageSize=10&pageNum=${pageNum}`,
+                    ),
+                loadingProp: 'toggleMsgLoading',
+                commit,
+            })
             commit(
                 'initChatMsg',
                 msgs.map(msg => ({
@@ -63,6 +72,18 @@ const actions = {
                 })),
             )
         }
+    },
+
+    async fetchChatOverview({ commit, rootState }) {
+        const list = await fetchData({
+            fetchFn: () =>
+                fetch(
+                    `${SERVER}/message/overview/${rootState.user.userInfo.id}`,
+                ),
+            loadingProp: 'toggleOverviewLoading',
+            commit,
+        })
+        commit('getOverviewList', list)
     },
 }
 

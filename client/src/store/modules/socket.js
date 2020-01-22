@@ -28,7 +28,7 @@ const actions = {
             document.onvisibilitychange = undefined
             // send pending msgs
             dispatch('sendPendingMsgs')
-            // TODO: how to ensure this msg is received by server
+            // register self
             state.socket.send(
                 JSON.stringify({
                     event: 'login',
@@ -46,6 +46,15 @@ const actions = {
             switch (msg.event) {
                 case 'confirm': {
                     commit('confirmChatMsg', msg.data)
+                    break
+                }
+                case 'message': {
+                    commit('addChatMsg', msg.data)
+                    break
+                }
+                default: {
+                    // eslint-disable-next-line
+                    console.error(`unknown message event: ${msg.event}`)
                 }
             }
         }
@@ -65,6 +74,10 @@ const actions = {
             }
         }
         // TODO: onerror
+        state.socket.onerror = e => {
+            // eslint-disable-next-line
+            console.error(e)
+        }
     },
     sendMsg({ state, commit, rootState }, msg) {
         const originId = Date.now()

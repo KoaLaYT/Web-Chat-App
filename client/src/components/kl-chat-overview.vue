@@ -11,7 +11,7 @@
             <span>{{ overview.title }}</span>
             <span>{{ overview.message }}</span>
         </section>
-        <section class="overview__time">{{ overview.time }}</section>
+        <section class="overview__time">{{ overview.time | short-date }}</section>
     </div>
 </template>
 
@@ -48,8 +48,7 @@ export default {
 }
 .overview__time {
     flex: 1 1 0;
-    align-self: flex-start;
-    margin-top: 1rem;
+    align-self: center;
     padding: 0 0.5rem;
 }
 .overview__info span {
