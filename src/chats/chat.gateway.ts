@@ -34,7 +34,9 @@ export class ChatGateway {
                             id: msg.id,
                             type: 'rcv',
                             sndId: data.sndId,
+                            sndName: data.sndName,
                             content: data.msg,
+                            time: (msg as any).createdAt,
                         },
                     }),
                 )
