@@ -49,7 +49,15 @@ const actions = {
                     break
                 }
                 case 'message': {
-                    commit('addChatMsg', msg.data)
+                    if (rootState.chat.withInfo.id === msg.data.sndId) {
+                        commit('addChatMsg', msg.data)
+                    }
+                    commit('rcvToOverviewList', {
+                        id: msg.data.sndId,
+                        title: msg.data.sndName,
+                        message: msg.data.content,
+                        time: msg.data.time,
+                    })
                     break
                 }
                 default: {
@@ -80,6 +88,7 @@ const actions = {
         }
     },
     sendMsg({ state, commit, rootState }, msg) {
+        if (!rootState.chat.withInfo.id) return
         const originId = Date.now()
         // assemble the message
         const message = {
@@ -109,7 +118,7 @@ const actions = {
             sending: true,
         })
         // add to overview list
-        commit('addToOverviewList', {
+        commit('sndToOverviewList', {
             id: rootState.chat.withInfo.id,
             title: rootState.chat.withInfo.name,
             message: msg,

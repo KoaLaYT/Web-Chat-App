@@ -1,21 +1,30 @@
 <template>
-    <div class="overview">
-        <el-avatar
-            shape="square"
-            size="large"
-            src="./koala-avatar.png"
-            fit="contain"
+    <div :class="withInfo.id===overview.id?'overview chatting':'overview'">
+
+        <el-badge
+            :is-dot="overview.new"
             class="overview__avatar"
-        ></el-avatar>
+        >
+            <el-avatar
+                shape="square"
+                size="large"
+                src="./koala-avatar.png"
+                fit="contain"
+            ></el-avatar>
+        </el-badge>
+
         <section class="overview__info">
             <span>{{ overview.title }}</span>
             <span>{{ overview.message }}</span>
         </section>
+
         <section class="overview__time">{{ overview.time | short-date }}</section>
+
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
     name: 'KlChatOverview',
     props: {
@@ -23,6 +32,11 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    computed: {
+        ...mapState({
+            withInfo: state => state.chat.withInfo,
+        }),
     },
 }
 </script>
@@ -58,5 +72,8 @@ export default {
 }
 .overview:hover {
     background-color: #f2f6fc;
+}
+.overview.chatting {
+    background-color: #e4e7ed;
 }
 </style>

@@ -41,15 +41,31 @@ const mutations = {
     toggleOverviewLoading(state, toggle) {
         state.overviewLoading = toggle
     },
-    addToOverviewList(state, msg) {
+    sndToOverviewList(state, msg) {
         const index = state.overviewList.findIndex(o => o.id === msg.id)
         if (index !== -1) {
-            // already in overview list
-            state.overviewList.splice(index, 1, msg)
-            // TODO: shift the order
-        } else {
-            // create a new overview list
+            state.overviewList.splice(index, 1)
         }
+        state.overviewList.unshift(msg)
+    },
+    rcvToOverviewList(state, msg) {
+        const index = state.overviewList.findIndex(o => o.id === msg.id)
+        // the message is from the chatter
+        if (state.withInfo.id && index === 0) {
+            state.overviewList.splice(index, 1, msg)
+            return
+        }
+        // otherwise, delete first
+        if (index >= 0) {
+            state.overviewList.splice(index, 1)
+        }
+        // add it back according whether in chatting
+        const pos = state.withInfo.id ? 1 : 0
+        state.overviewList.splice(pos, 0, { ...msg, new: true })
+    },
+    removeBadgeOfOverview(state, id) {
+        const found = state.overviewList.find(o => o.id === id)
+        if (found) found.new = false
     },
 }
 
@@ -79,6 +95,7 @@ const actions = {
                     content: msg.msg,
                 })),
             )
+            commit('removeBadgeOfOverview', withId)
         }
     },
 
