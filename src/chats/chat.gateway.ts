@@ -33,6 +33,7 @@ export class ChatGateway {
                         data: {
                             id: msg.id,
                             type: 'rcv',
+                            sndId: data.sndId,
                             content: data.msg,
                         },
                     }),
