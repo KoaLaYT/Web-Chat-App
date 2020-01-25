@@ -108,6 +108,13 @@ const actions = {
             content: msg,
             sending: true,
         })
+        // add to overview list
+        commit('addToOverviewList', {
+            id: rootState.chat.withInfo.id,
+            title: rootState.chat.withInfo.name,
+            message: msg,
+            time: new Date(originId).toISOString(),
+        })
     },
     sendPendingMsgs({ state, commit }) {
         state.pendingMsgs.forEach((msg, index) => {

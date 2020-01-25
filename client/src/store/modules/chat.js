@@ -12,13 +12,11 @@ const mutations = {
     addChatMsg(state, msg) {
         state.chatMsgs.push(msg)
         setImmediate(() => {
-            document
-                .querySelector('.last')
-                .scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'end',
-                    inline: 'end',
-                })
+            document.querySelector('.last').scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'end',
+            })
         })
     },
     initChatMsg(state, msgs) {
@@ -42,6 +40,16 @@ const mutations = {
     },
     toggleOverviewLoading(state, toggle) {
         state.overviewLoading = toggle
+    },
+    addToOverviewList(state, msg) {
+        const index = state.overviewList.findIndex(o => o.id === msg.id)
+        if (index !== -1) {
+            // already in overview list
+            state.overviewList.splice(index, 1, msg)
+            // TODO: shift the order
+        } else {
+            // create a new overview list
+        }
     },
 }
 
